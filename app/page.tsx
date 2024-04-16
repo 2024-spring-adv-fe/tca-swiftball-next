@@ -1,8 +1,18 @@
 import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { getRequestContext } from "@cloudflare/next-on-pages";
+import { auth } from "@clerk/nextjs/server";
+import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+   const { userId }: { userId: string | null } = auth();
+
+   const db = getRequestContext().env.DB;
+   const { results: ballots } = await db
+      .prepare(`SELECT * FROM ballots WHERE user_id = '${userId}';`)
+      .all<Ballot>();
+
    return (
-      <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <main>
          <SignedOut>
             <div>
                <h1>Swiftball</h1>
@@ -10,7 +20,18 @@ export default function Home() {
             </div>
          </SignedOut>
          <SignedIn>
-            <div></div>
+            <div>
+               <h1>Swiftball</h1>
+               <p>
+                  You are signed in. See your{" "}
+                  <span>
+                     <Link className="text-blue-500 hover:underline" href="/profile">
+                        profile
+                     </Link>
+                  </span>
+                  .
+               </p>
+            </div>
          </SignedIn>
       </main>
    );
