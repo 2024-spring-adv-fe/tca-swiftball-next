@@ -9,7 +9,9 @@ export default function Home() {
                <p>You are not signed in.</p>
             </div>
          </SignedOut>
-         <SignedIn></SignedIn>
+         <SignedIn>
+            <div></div>
+         </SignedIn>
       </main>
    );
 }
