@@ -1,5 +1,6 @@
 import { getRequestContext } from "@cloudflare/next-on-pages";
 import { auth } from "@clerk/nextjs/server";
+import type { Ballot } from "@/lib/types/ballot";
 
 export default async function Profile() {
    auth().protect();

@@ -1,4 +1,30 @@
-type Ballot = {
+export type preBallot = {
+   title: string;
+   evermore_champagne_cheer: string;
+   evermore_dress: string;
+   fearless_dress: string;
+   folklore_dress: string;
+   lover_bodysuit: string;
+   lover_guitar_color: string;
+   lover_themanjacket: string;
+   midnights_karma_jacket: string;
+   midnights_midnight_rain_bodysuit: string;
+   midnights_tshirt_dress: string;
+   misc_special_guest: string;
+   misc_unhinged: string;
+   n1989_set: string;
+   red_22_shirt: string;
+   reputation_jumpsuit: string;
+   speak_now_dress: string;
+   surprise_guitar_album: string;
+   surprise_guitar_song: string;
+   surprise_guitar_speech: string;
+   surprise_piano_album: string;
+   surprise_piano_song: string;
+   surprise_piano_speech: string;
+};
+
+export type Ballot = {
    ballot_id: string;
    user_id: string;
    title: string;

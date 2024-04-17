@@ -2,6 +2,7 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { getRequestContext } from "@cloudflare/next-on-pages";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
+import type { Ballot } from "@/lib/types/ballot";
 
 export default async function Home() {
    const { userId }: { userId: string | null } = auth();
@@ -25,7 +26,10 @@ export default async function Home() {
                <p>
                   You are signed in. See your{" "}
                   <span>
-                     <Link className="text-blue-500 hover:underline" href="/profile">
+                     <Link
+                        className="text-blue-500 hover:underline"
+                        href="/profile"
+                     >
                         profile
                      </Link>
                   </span>
