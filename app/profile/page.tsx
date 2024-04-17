@@ -20,6 +20,8 @@ export default async function Profile() {
                   <li>{ballot.ballot_id}</li>
                   <li>{ballot.user_id}</li>
                   <li>{ballot.title}</li>
+                  <li>{ballot.points}</li>
+                  <li>{ballot.accuracy}</li>
                </ul>
             ))}
          </div>
