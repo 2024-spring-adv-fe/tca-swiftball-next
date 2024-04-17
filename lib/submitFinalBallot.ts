@@ -3,6 +3,7 @@
 import type { ballotAnswers } from "@/lib/types/ballot";
 import { auth } from "@clerk/nextjs/server";
 import { getRequestContext } from "@cloudflare/next-on-pages";
+import { calculatePoints } from "./calculatePoints";
 
 const { userId }: { userId: string | null } = auth();
 
@@ -10,6 +11,8 @@ export const submitFinalBallot = async (
    ballotAnswers: ballotAnswers,
    ballot_id: string,
 ) => {
+   //const points = calculatePoints(ballot_id, ballotAnswers);
+   calculatePoints(ballot_id, ballotAnswers);
    const points = 0;
    const accuracy = 0;
    const now = new Date().toISOString();
@@ -75,6 +78,9 @@ export const submitFinalBallot = async (
          ballotAnswers.TAYLOR_midnights_midnight_rain_bodysuit,
          ballotAnswers.TAYLOR_midnights_karma_jacket,
          ballotAnswers.TAYLOR_misc_special_guest,
+         ballotAnswers.TAYLOR_misc_unhinged,
+
+         ballot_id,
       )
       .run();
 };

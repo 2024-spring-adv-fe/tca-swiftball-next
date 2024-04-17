@@ -99,7 +99,15 @@ const FormSchema = z.object({
    }),
 });
 
-export default function BallotForm(ballot_id: string) {
+interface FinishBallotFormProps {
+   setIsBallotFinished: React.Dispatch<React.SetStateAction<boolean>>;
+   ballot_id: string;
+}
+
+const NewBallotForm: React.FC<FinishBallotFormProps> = ({
+   setIsBallotFinished,
+   ballot_id,
+}) => {
    const form = useForm<z.infer<typeof FormSchema>>({
       resolver: zodResolver(FormSchema),
       defaultValues: {
@@ -108,8 +116,16 @@ export default function BallotForm(ballot_id: string) {
       },
    });
 
+   const handleCompletedBallot = async (
+      data: z.infer<typeof FormSchema>,
+      ballot_id: string,
+   ) => {
+      const ballotId = await submitFinalBallot(data, ballot_id);
+   };
+
    function onSubmit(data: z.infer<typeof FormSchema>) {
-      submitFinalBallot(data, ballot_id);
+      handleCompletedBallot(data, ballot_id);
+      setIsBallotFinished(true);
    }
 
    return (
@@ -1312,4 +1328,6 @@ export default function BallotForm(ballot_id: string) {
          </form>
       </Form>
    );
-}
+};
+
+export default NewBallotForm;
