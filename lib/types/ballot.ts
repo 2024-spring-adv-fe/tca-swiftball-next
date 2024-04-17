@@ -129,4 +129,5 @@ export type Ballot = {
    TAYLOR_misc_unhinged: string;
 
    accuracy: number;
+   ballot_finished: number;
 };

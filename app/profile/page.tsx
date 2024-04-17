@@ -45,7 +45,14 @@ export default async function Profile() {
                <ul className="my-5">
                   <li>{ballot.ballot_id}</li>
                   <li>{ballot.user_id}</li>
-                  <li>{ballot.title}</li>
+                  <li>
+                     <a
+                        href={`/ballot/${ballot.ballot_id}`}
+                        className="text-blue-500 hover:underline"
+                     >
+                        {ballot.title}
+                     </a>
+                  </li>
                   <li>{ballot.points}</li>
                   <li>{ballot.accuracy}</li>
                </ul>

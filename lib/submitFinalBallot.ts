@@ -93,7 +93,9 @@ export const submitFinalBallot = async (
          TAYLOR_midnights_midnight_rain_bodysuit = ?,
          TAYLOR_midnights_karma_jacket = ?,
          TAYLOR_misc_special_guest = ?,
-         TAYLOR_misc_unhinged = ?
+         TAYLOR_misc_unhinged = ?,
+
+         ballot_finished = ?
 
       WHERE ballot_id = ?
    `,
@@ -126,6 +128,7 @@ export const submitFinalBallot = async (
          ballotAnswers.TAYLOR_misc_special_guest,
          ballotAnswers.TAYLOR_misc_unhinged,
 
+         1,
          ballot_id,
       )
       .run();
