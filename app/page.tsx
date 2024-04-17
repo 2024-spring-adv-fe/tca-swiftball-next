@@ -3,6 +3,7 @@ import { getRequestContext } from "@cloudflare/next-on-pages";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import type { Ballot } from "@/lib/types/ballot";
+import SignedInHome from "@/components/signedInHome";
 
 export default async function Home() {
    const { userId }: { userId: string | null } = auth();
@@ -13,7 +14,7 @@ export default async function Home() {
       .all<Ballot>();
 
    return (
-      <main>
+      <main className="m-4 flex-1">
          <SignedOut>
             <div>
                <h1>Swiftball</h1>
@@ -22,19 +23,7 @@ export default async function Home() {
          </SignedOut>
          <SignedIn>
             <div>
-               <h1>Swiftball</h1>
-               <p>
-                  You are signed in. See your{" "}
-                  <span>
-                     <Link
-                        className="text-blue-500 hover:underline"
-                        href="/profile"
-                     >
-                        profile
-                     </Link>
-                  </span>
-                  .
-               </p>
+               <SignedInHome />
             </div>
          </SignedIn>
       </main>

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { inter } from "@/app/fonts";
 import "./globals.css";
+import Header from "@/components/header";
 
 export const runtime = "edge";
 
@@ -17,7 +19,12 @@ export default function RootLayout({
    return (
       <ClerkProvider>
          <html lang="en">
-            <body>{children}</body>
+            <body
+               className={`${inter.className} relative flex min-h-screen flex-col bg-background`}
+            >
+               <Header />
+               {children}
+            </body>
          </html>
       </ClerkProvider>
    );
