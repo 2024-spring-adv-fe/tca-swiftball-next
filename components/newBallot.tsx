@@ -1,7 +1,5 @@
-"use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -95,14 +93,22 @@ const FormSchema = z.object({
       required_error: "Guess which jacket Taylor will wear",
    }),
    misc_special_guest: z.enum(FormValues.MISC_SPECIAL_GUEST, {
-      required_error: "Guess the special guest",
+      required_error: "Guess whether there will be a special guest",
    }),
    misc_unhinged: z.enum(FormValues.MISC_UNHINGED, {
       required_error: "Guess whether something unhinged (planned!) will happen",
    }),
 });
 
-export default function BallotForm() {
+interface NewBallotFormProps {
+   setIsBallotCreated: React.Dispatch<React.SetStateAction<boolean>>;
+   setBallotId: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const NewBallotForm: React.FC<NewBallotFormProps> = ({
+   setIsBallotCreated,
+   setBallotId,
+}) => {
    const form = useForm<z.infer<typeof FormSchema>>({
       resolver: zodResolver(FormSchema),
       defaultValues: {
@@ -112,8 +118,14 @@ export default function BallotForm() {
       },
    });
 
+   const handleInitialBallot = async (data: z.infer<typeof FormSchema>) => {
+      const ballotId = await submitInitialBallot(data);
+      setBallotId(ballotId);
+   };
+
    function onSubmit(data: z.infer<typeof FormSchema>) {
-      submitInitialBallot(data);
+      handleInitialBallot(data);
+      setIsBallotCreated(true);
    }
 
    return (
@@ -1326,8 +1338,10 @@ export default function BallotForm() {
                )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Start Swiftball</Button>
          </form>
       </Form>
    );
-}
+};
+
+export default NewBallotForm;

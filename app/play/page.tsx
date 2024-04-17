@@ -1,14 +1,21 @@
-import { auth } from "@clerk/nextjs/server";
-import BallotForm from "@/components/newBallotForm";
+"use client";
 
-export default async function PlayPage() {
-   auth().protect();
+import NewBallotForm from "@/components/newBallot";
+import { useState } from "react";
 
-   const { userId }: { userId: string | null } = auth();
+export default function Play() {
+   const [isBallotCreated, setIsBallotCreated] = useState(false);
+   const [ballotId, setBallotId] = useState("");
 
    return (
       <main>
-         <BallotForm />
+         {isBallotCreated ?
+            <p>{ballotId}</p>
+         :  <NewBallotForm
+               setIsBallotCreated={setIsBallotCreated}
+               setBallotId={setBallotId}
+            />
+         }
       </main>
    );
 }

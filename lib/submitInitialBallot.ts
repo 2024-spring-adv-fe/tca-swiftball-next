@@ -76,4 +76,6 @@ export const submitInitialBallot = async (preBallot: preBallot) => {
          preBallot.misc_unhinged,
       )
       .run();
+
+   return ballot_id;
 };
