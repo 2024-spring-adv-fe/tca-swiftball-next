@@ -5,6 +5,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getRequestContext } from "@cloudflare/next-on-pages";
 import { calculatePoints } from "./calculatePoints";
 import { calculateAccuracy } from "./calculateAccuracy";
+import { calculateProfileStats } from "./calculateProfileStats";
 
 const { userId }: { userId: string | null } = auth();
 
@@ -48,6 +49,10 @@ export const submitFinalBallot = async (
    ballotAnswers: ballotAnswers,
    ballot_id: string,
 ) => {
+   if (!userId) {
+      return;
+   }
+
    const guesses = await fetchGuesses(ballot_id);
 
    if (!guesses) {
@@ -124,4 +129,6 @@ export const submitFinalBallot = async (
          ballot_id,
       )
       .run();
+
+   calculateProfileStats(userId);
 };
