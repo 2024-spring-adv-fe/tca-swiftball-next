@@ -28,9 +28,7 @@ export const calculateProfileStats = async (userId: string) => {
 
    ballots.forEach((ballot) => {
       totalPoints += Number(ballot.points);
-      console.log(totalPoints);
       accuracies += Number(ballot.accuracy);
-      console.log(accuracies);
    });
 
    const avgPoints = totalPoints / totalBallots;

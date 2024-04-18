@@ -5,7 +5,8 @@ import { auth } from "@clerk/nextjs/server";
 import type { Ballot } from "@/lib/types/ballot";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tally5, TicketCheck, Target } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants, Button } from "@/components/ui/button";
+import Link from "next/link";
 
 type userStats = {
    total_ballots: number;
@@ -22,7 +23,7 @@ export default async function SignedInHome() {
    const db = getRequestContext().env.DB;
    const { results: ballots } = await db
       .prepare(
-         `SELECT ballot_id, points, title, accuracy FROM ballots WHERE user_id = '${userId}';`,
+         `SELECT ballot_id, points, title, accuracy FROM ballots WHERE user_id = '${userId}' ORDER BY finished_at DESC;`,
       )
       .all<Ballot>();
 
@@ -32,55 +33,53 @@ export default async function SignedInHome() {
 
    return (
       <>
-         {userStats && (
-            <div className="grid gap-4 md:grid-cols-3">
-               <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                     <CardTitle className="text-sm font-medium">
-                        Total points
-                     </CardTitle>
-                     <Tally5 className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                     <div className="text-2xl font-bold">
-                        {userStats.total_points}
-                     </div>
-                  </CardContent>
-               </Card>
-               <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                     <CardTitle className="text-sm font-medium">
-                        Ballots submitted
-                     </CardTitle>
-                     <TicketCheck className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                     <div className="text-2xl font-bold">
-                        {userStats.total_ballots}
-                     </div>
-                     {userStats.total_ballots <= 0 && (
-                        <p className="text-xs text-muted-foreground">
-                           You haven't submitted any ballots yet!
-                        </p>
-                     )}
-                  </CardContent>
-               </Card>
-               <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                     <CardTitle className="text-sm font-medium">
-                        Accuracy
-                     </CardTitle>
-                     <Target className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                     <div className="text-2xl font-bold">
-                        {(userStats.total_accuracy * 100).toFixed(1)}%
-                     </div>
-                  </CardContent>
-               </Card>
+         <div className="grid gap-4 md:grid-cols-3">
+            <Card>
+               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                     Total points
+                  </CardTitle>
+                  <Tally5 className="h-4 w-4 text-muted-foreground" />
+               </CardHeader>
+               <CardContent>
+                  <div className="text-2xl font-bold">
+                     {userStats ? userStats.total_points : "0"}
+                  </div>
+               </CardContent>
+            </Card>
+            <Card>
+               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                     Ballots submitted
+                  </CardTitle>
+                  <TicketCheck className="h-4 w-4 text-muted-foreground" />
+               </CardHeader>
+               <CardContent>
+                  <div className="text-2xl font-bold">
+                     {userStats ? userStats.total_ballots : "0"}
+                  </div>
+               </CardContent>
+            </Card>
+            <Card>
+               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Accuracy</CardTitle>
+                  <Target className="h-4 w-4 text-muted-foreground" />
+               </CardHeader>
+               <CardContent>
+                  <div className="text-2xl font-bold">
+                     {userStats ?
+                        (userStats.total_accuracy * 100).toFixed(1) + "%"
+                     :  "0%"}
+                  </div>
+               </CardContent>
+            </Card>
+         </div>
+         <div>
+            <div className="my-7">
+               <Button asChild className="w-full">
+                  <Link href="/play">New Ballot</Link>
+               </Button>
             </div>
-         )}
-         <div className="mt-7">
             <ul className="flex flex-col gap-4">
                {ballots.map((ballot) => (
                   <li

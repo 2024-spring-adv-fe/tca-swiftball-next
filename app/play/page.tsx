@@ -1,18 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import NewBallotForm from "@/components/newBallot";
 import FinishBallotForm from "@/components/finishBallot";
+import { redirect } from "next/navigation";
 
 export default function Play() {
    const [isBallotCreated, setIsBallotCreated] = useState(false);
    const [ballotId, setBallotId] = useState("");
    const [isBallotFinished, setIsBallotFinished] = useState(false);
 
+   useEffect(() => {
+      if (isBallotCreated) {
+         window.scrollTo(0, 0);
+      }
+
+      if (isBallotFinished) {
+         redirect(`/`);
+      }
+   }, [isBallotCreated, isBallotFinished]);
+
    return (
       <main>
          {isBallotFinished ?
-            <h1>Ballot Finished</h1>
+            null
          : isBallotCreated ?
             <FinishBallotForm
                setIsBallotFinished={setIsBallotFinished}
