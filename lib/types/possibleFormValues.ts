@@ -118,10 +118,4 @@ export const MIDNIGHTS_KARMA_JACKET = [
 
 export const MISC_SPECIAL_GUEST = ["yes", "no"] as const;
 
-export enum ENUM_MISC_UNHINGED {
-   YES = "yes",
-   NO = "no",
-}
-
-export const MISC_UNHINGED: ReadonlyArray<string> =
-   Object.values(ENUM_MISC_UNHINGED);
+export const MISC_UNHINGED = ["yes", "no"] as [string, string];
