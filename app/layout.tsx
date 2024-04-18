@@ -23,7 +23,9 @@ export default function RootLayout({
                className={`${inter.className} relative flex min-h-screen flex-col bg-background`}
             >
                <Header />
-               {children}
+               <main className="mx-auto w-full max-w-screen-lg p-4">
+                  {children}
+               </main>
             </body>
          </html>
       </ClerkProvider>

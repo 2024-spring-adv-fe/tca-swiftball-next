@@ -3,15 +3,9 @@
 import { getRequestContext } from "@cloudflare/next-on-pages";
 import { auth } from "@clerk/nextjs/server";
 import type { Ballot } from "@/lib/types/ballot";
-import {
-   Card,
-   CardContent,
-   CardDescription,
-   CardFooter,
-   CardHeader,
-   CardTitle,
-} from "@/components/ui/card";
-import { TicketIcon, TrophyIcon } from "@heroicons/react/24/outline";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tally5, TicketCheck, Target } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 
 type userStats = {
    total_ballots: number;
@@ -27,7 +21,9 @@ export default async function SignedInHome() {
 
    const db = getRequestContext().env.DB;
    const { results: ballots } = await db
-      .prepare(`SELECT * FROM ballots WHERE user_id = '${userId}';`)
+      .prepare(
+         `SELECT ballot_id, points, title, accuracy FROM ballots WHERE user_id = '${userId}';`,
+      )
       .all<Ballot>();
 
    const userStats = await db
@@ -35,15 +31,28 @@ export default async function SignedInHome() {
       .first<userStats>();
 
    return (
-      <main>
+      <>
          {userStats && (
             <div className="grid gap-4 md:grid-cols-3">
                <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                      <CardTitle className="text-sm font-medium">
+                        Total points
+                     </CardTitle>
+                     <Tally5 className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                     <div className="text-2xl font-bold">
+                        {userStats.total_points}
+                     </div>
+                  </CardContent>
+               </Card>
+               <Card>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                     <CardTitle className="text-sm font-medium">
                         Ballots submitted
                      </CardTitle>
-                     <TicketIcon className="h-4 w-4 text-muted-foreground" />
+                     <TicketCheck className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
                      <div className="text-2xl font-bold">
@@ -59,22 +68,9 @@ export default async function SignedInHome() {
                <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                      <CardTitle className="text-sm font-medium">
-                        Total points
-                     </CardTitle>
-                     <TrophyIcon className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                     <div className="text-2xl font-bold">
-                        {userStats.total_points}
-                     </div>
-                  </CardContent>
-               </Card>
-               <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                     <CardTitle className="text-sm font-medium">
                         Accuracy
                      </CardTitle>
-                     <TrophyIcon className="h-4 w-4 text-muted-foreground" />
+                     <Target className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
                      <div className="text-2xl font-bold">
@@ -84,24 +80,33 @@ export default async function SignedInHome() {
                </Card>
             </div>
          )}
-         <div>
-            {ballots.map((ballot) => (
-               <ul className="my-5">
-                  <li>{ballot.ballot_id}</li>
-                  <li>{ballot.user_id}</li>
-                  <li>
-                     <a
-                        href={`/ballot/${ballot.ballot_id}`}
-                        className="text-blue-500 hover:underline"
-                     >
-                        {ballot.title}
-                     </a>
+         <div className="mt-7">
+            <ul className="flex flex-col gap-4">
+               {ballots.map((ballot) => (
+                  <li
+                     className="flex flex-row items-center gap-6"
+                     key={ballot.ballot_id}
+                  >
+                     <div className="flex-1 text-right">
+                        <span>{ballot.points}</span>
+                     </div>
+                     <div className="flex-1">
+                        <a
+                           href={`/ballot/${ballot.ballot_id}`}
+                           className={`${buttonVariants({
+                              variant: "outline",
+                           })} w-full`}
+                        >
+                           {ballot.title}
+                        </a>
+                     </div>
+                     <div className="flex-1">
+                        <span>{(ballot.accuracy * 100).toFixed(1)}%</span>
+                     </div>
                   </li>
-                  <li>{ballot.points}</li>
-                  <li>{ballot.accuracy}</li>
-               </ul>
-            ))}
+               ))}
+            </ul>
          </div>
-      </main>
+      </>
    );
 }

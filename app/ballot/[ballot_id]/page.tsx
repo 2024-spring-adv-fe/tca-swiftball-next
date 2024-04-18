@@ -12,8 +12,8 @@ export default async function BallotPage({
    const { userId }: { userId: string | null } = auth();
 
    return (
-      <div>
+      <>
          {userId && <PeekBallot ballot_id={params.ballot_id} user_id={userId} />}
-      </div>
+      </>
    );
 }
