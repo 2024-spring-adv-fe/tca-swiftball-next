@@ -1,6 +1,10 @@
 "use server";
-import PeekBallot from "@/components/peekBallot";
 import { auth } from "@clerk/nextjs/server";
+import { fetchBallot } from "@/lib/fetchBallot";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AnswersTable } from "@/components/peek-ballot/answers-table";
+import { GuessesTable } from "@/components/peek-ballot/guesses-table";
+import { MixedTable } from "@/components/peek-ballot/mixed-table";
 
 export default async function BallotPage({
    params,
@@ -10,10 +14,25 @@ export default async function BallotPage({
    auth().protect();
 
    const { userId }: { userId: string | null } = auth();
+   const ballot = await fetchBallot(params.ballot_id, userId);
 
    return (
-      <>
-         {userId && <PeekBallot ballot_id={params.ballot_id} user_id={userId} />}
-      </>
+      <div>
+         {ballot ?
+            <div>
+               <h1 className="text-center text-2xl font-bold">{ballot.title}</h1>
+               <Tabs defaultValue="mixed" className="mt-4 w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                     <TabsTrigger value="guesses">You</TabsTrigger>
+                     <TabsTrigger value="mixed">Both</TabsTrigger>
+                     <TabsTrigger value="answers">Taylor</TabsTrigger>
+                  </TabsList>
+                  <GuessesTable {...ballot} />
+                  <MixedTable {...ballot} />
+                  <AnswersTable {...ballot} />
+               </Tabs>
+            </div>
+         :  <div></div>}
+      </div>
    );
 }
