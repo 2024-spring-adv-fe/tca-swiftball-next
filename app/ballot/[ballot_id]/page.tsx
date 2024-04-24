@@ -33,8 +33,15 @@ export async function generateMetadata({
          title: "Ballot not found",
       };
    } else {
+      const title = ballot.title;
+      const formattedDate = new Date(ballot.created_at).toLocaleString("en-US", {
+         month: "short",
+         day: "numeric",
+         hour: "2-digit",
+         minute: "2-digit",
+      });
       return {
-         title: ballot.title,
+         title: `${title} - ${formattedDate}`,
       };
    }
 }
