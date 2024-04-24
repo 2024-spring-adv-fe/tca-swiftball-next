@@ -6,7 +6,10 @@
       "dev": "next dev",
       "build": "next build",
       "start": "next start",
-      "lint": "next lint"
+      "lint": "next lint",
+      "pages-dev": "exec wrangler pages dev .vercel/output/static",
+      "pages-build": "exec next-on-pages",
+      "pages-deploy": "exec wrangler pages deploy .vercel/output/static"
    },
    "dependencies": {
       "@clerk/nextjs": "5.0.0-beta.43",
