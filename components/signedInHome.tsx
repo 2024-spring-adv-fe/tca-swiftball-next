@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tally5, TicketCheck, Target } from "lucide-react";
 import { buttonVariants, Button } from "@/components/ui/button";
 import Link from "next/link";
+import { calculateProfileStats } from "@/lib/calculateProfileStats";
 
 type userStats = {
    total_ballots: number;
@@ -19,6 +20,10 @@ export default async function SignedInHome() {
    auth().protect();
 
    const { userId }: { userId: string | null } = auth();
+
+   if (userId) {
+      calculateProfileStats(userId);
+   }
 
    const db = getRequestContext().env.DB;
    const { results: ballots } = await db
